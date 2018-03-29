@@ -1,0 +1,8 @@
+.DS_Store
+/composer.lock
+/vendor/
+tests-report/
+/.idea/
+/var/*
+
+!.empty
