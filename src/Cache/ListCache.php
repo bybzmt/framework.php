@@ -1,8 +1,8 @@
 <?php
-namespace Bybzmt\Blog\Common\Cache;
+namespace Bybzmt\Framework\Cache;
 
-use Bybzmt\Blog\Common\Cache as PCache;
-use Bybzmt\Blog\Common\Context;
+use Bybzmt\Framework\Cache as PCache;
+use Bybzmt\Framework\Context;
 
 abstract class ListCache extends PCache
 {

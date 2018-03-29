@@ -1,5 +1,5 @@
 <?php
-namespace Bybzmt\Blog\Common;
+namespace Bybzmt\Framework;
 
 abstract class Helper extends Component
 {

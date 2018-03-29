@@ -1,7 +1,7 @@
 <?php
-namespace Bybzmt\Blog\Common;
+namespace Bybzmt\Framework;
 
-use Bybzmt\Blog\Common\Config;
+use Bybzmt\Framework\Config;
 use Bybzmt\Router\Reverse as PReverse;
 
 abstract class Reverse extends PReverse

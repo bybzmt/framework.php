@@ -1,5 +1,5 @@
 <?php
-namespace Bybzmt\Blog\Common;
+namespace Bybzmt\Framework;
 
 /**
  * 环境上下对像

@@ -1,7 +1,7 @@
 <?php
-namespace Bybzmt\Blog\Common\Cache;
+namespace Bybzmt\Framework\Cache;
 
-use Bybzmt\Blog\Common;
+use Bybzmt\Framework;
 
 class Exception extends Common\Exception
 {

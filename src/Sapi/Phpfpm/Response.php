@@ -1,5 +1,5 @@
 <?php
-namespace Bybzmt\Blog\Common\Sapi\Phpfpm;
+namespace Bybzmt\Framework\Sapi\Phpfpm;
 
 /**
  * 响应对像

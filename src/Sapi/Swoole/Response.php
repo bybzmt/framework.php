@@ -1,7 +1,7 @@
 <?php
-namespace Bybzmt\Blog\Common\Swoole;
+namespace Bybzmt\Framework\Swoole;
 
-use Bybzmt\Blog\Common\Sapi\Phpfpm\Response as Base;
+use Bybzmt\Framework\Sapi\Phpfpm\Response as Base;
 use swoole_http_response;
 
 /**

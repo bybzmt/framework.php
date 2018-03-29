@@ -1,5 +1,5 @@
 <?php
-namespace Bybzmt\Blog\Common\Helper;
+namespace Bybzmt\Framework\Helper;
 
 use Memcached;
 

@@ -1,5 +1,5 @@
 <?php
-namespace Bybzmt\Blog\Common\Sapi;
+namespace Bybzmt\Framework\Sapi;
 
 /**
  * 响应对像

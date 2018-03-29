@@ -1,7 +1,7 @@
 <?php
-namespace Bybzmt\Blog\Common\Helper;
+namespace Bybzmt\Framework\Helper;
 
-use Bybzmt\Blog\Common\Helper;
+use Bybzmt\Framework\Helper;
 
 /**
  * 常用SQL快速拼接器

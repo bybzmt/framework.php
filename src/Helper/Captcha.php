@@ -1,7 +1,7 @@
 <?php
-namespace Bybzmt\Blog\Common\Helper;
+namespace Bybzmt\Framework\Helper;
 
-use Bybzmt\Blog\Common\Helper;
+use Bybzmt\Framework\Helper;
 use Gmagick;
 use GmagickPixel;
 use GmagickDraw;

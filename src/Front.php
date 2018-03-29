@@ -1,8 +1,8 @@
 <?php
-namespace Bybzmt\Blog\Common;
+namespace Bybzmt\Framework;
 
-use Bybzmt\Blog\Common\Sapi\Phpfpm\Request;
-use Bybzmt\Blog\Common\Sapi\Phpfpm\Response;
+use Bybzmt\Framework\Sapi\Phpfpm\Request;
+use Bybzmt\Framework\Sapi\Phpfpm\Response;
 use swoole_http_server;
 
 class Front
