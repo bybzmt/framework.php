@@ -23,3 +23,4 @@ abstract class Component
         return $attr;
     }
 }
+

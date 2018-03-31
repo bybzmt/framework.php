@@ -3,6 +3,8 @@ namespace Bybzmt\Framework;
 
 abstract class Bootstrap
 {
+    protected $_ctx = array();
+
     public function __construct()
     {
         set_error_handler(array($this, 'exception_error_handler'));
@@ -14,4 +16,5 @@ abstract class Bootstrap
     }
 
     abstract public function run($request, $response);
+
 }

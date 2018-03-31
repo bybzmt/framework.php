@@ -1,10 +1,7 @@
 <?php
-namespace Bybzmt\Framework\Cache;
+namespace Bybzmt\Framework;
 
-use Bybzmt\Framework\Cache as PCache;
-use Bybzmt\Framework\Context;
-
-abstract class ListCache extends PCache
+abstract class ListCache extends Cache
 {
     //缓存过期时间
     protected $expiration = 1800;
@@ -76,7 +73,7 @@ abstract class ListCache extends PCache
 
     public function getAllIds()
     {
-        $ids = $this->unserialize($this->_ctx->getMemcached()->get($this->key));
+        $ids = $this->unserialize($this->getMemcached()->get($this->key));
         if ($ids === null) {
             $ids = $this->loadData($this->size);
             $this->setAllIds($ids);
@@ -86,12 +83,12 @@ abstract class ListCache extends PCache
 
     public function setAllIds(array $ids)
     {
-        return $this->_ctx->getMemcached()->set($this->key, $this->serialize($ids), $this->expiration);
+        return $this->getMemcached()->set($this->key, $this->serialize($ids), $this->expiration);
     }
 
     public function del()
     {
-        return $this->_ctx->getMemcached()->delete($this->key);
+        return $this->getMemcached()->delete($this->key);
     }
 
 

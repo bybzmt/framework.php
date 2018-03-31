@@ -28,7 +28,7 @@ class StaticFile
             $this->_ctx->response->header('Last-Modified', gmdate(DATE_RFC850, $time));
             $this->_ctx->response->end();
         } else {
-            $this->_ctx->response->header('Content-Type', self::_mime_type($file));
+            $this->_ctx->response->header('Content-Type', $this->_mime_type($file));
             $this->_ctx->response->header('Content-Length', $size);
             $this->_ctx->response->header("Etag", $etag);
             $this->_ctx->response->header('Last-Modified', gmdate(DATE_RFC850, $time));
@@ -36,7 +36,7 @@ class StaticFile
         }
     }
 
-    private static function _mime_type($filename)
+    private function _mime_type($filename)
     {
         $mime_types = array(
             'txt' => 'text/plain',

@@ -6,14 +6,9 @@ use Bybzmt\Router\Reverse as PReverse;
 
 abstract class Reverse extends PReverse
 {
-    static protected function init()
+    public function __construct()
     {
-        static $ins;
-        if (!$ins) {
-            $ins = new static(self::initData());
-        }
-
-        return $ins;
+        parent::__construct(self::initData());
     }
 
     static protected function initData()
@@ -30,5 +25,5 @@ abstract class Reverse extends PReverse
         }
     }
 
-    abstract static public function mkUrl(string $func, array $params=array(), bool $https=false);
+    abstract public function mkUrl(string $func, array $params=array(), bool $https=false);
 }

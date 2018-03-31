@@ -38,7 +38,7 @@ abstract class Table extends Component
             return [];
         }
 
-        list($sql, $params) = $this->_ctx->getHelper("SQLBuilder")->select($this->_columns, $this->_tableName, [$this->_primary=>$ids]);
+        list($sql, $params) = $this->_ctx->get("Helper.SQLBuilder")->select($this->_columns, $this->_tableName, [$this->_primary=>$ids]);
 
         $rows = $this->query($sql, $params)->fetchAll(PDO::FETCH_ASSOC);
 
@@ -51,7 +51,7 @@ abstract class Table extends Component
             return false;
         }
 
-        list($sql, $vals) = $this->_ctx->getHelper("SQLBuilder")->insert($this->_tableName, $row);
+        list($sql, $vals) = $this->_ctx->get("Helper.SQLBuilder")->insert($this->_tableName, $row);
 
         $affected = $this->exec($sql, $vals);
         if ($affected) {
@@ -70,7 +70,7 @@ abstract class Table extends Component
             return false;
         }
 
-        list($sql, $vals) = $this->_ctx->getHelper("SQLBuilder")->update($this->_tableName, $row, [$this->_primary=>$id]);
+        list($sql, $vals) = $this->_ctx->get("Helper.SQLBuilder")->update($this->_tableName, $row, [$this->_primary=>$id]);
 
         return $this->exec($sql, $vals);
     }
@@ -84,7 +84,7 @@ abstract class Table extends Component
 
     protected function getDB(bool $isMaster=false)
     {
-        return $this->_ctx->getDb($this->_dbName . ($isMaster?'_master':'_slave'));
+        return $this->_ctx->get("Resource")->getDb($this->_dbName . ($isMaster?'_master':'_slave'));
     }
 
     protected function query(string $sql, array $params=[], bool $isMaster=false):PDOStatement

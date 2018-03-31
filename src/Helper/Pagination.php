@@ -4,7 +4,7 @@ namespace Bybzmt\Framework\Helper;
 class Pagination
 {
     //固定数量翻页
-    public static function style1(int $count, int $size, int $current, callable $fn)
+    public function style1(int $count, int $size, int $current, callable $fn)
     {
         $pageNum = 10;
 
@@ -46,7 +46,7 @@ class Pagination
 	}
 
     //按数据量显示页数
-    public static function style2(int $count, int $size, int $current, callable $fn)
+    public function style2(int $count, int $size, int $current, callable $fn)
     {
         $pageNum = 10;
 

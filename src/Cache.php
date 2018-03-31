@@ -27,7 +27,7 @@ abstract class Cache extends Component
 
     protected function getMemcached()
     {
-        return $this->_ctx->getMemcached($this->memcachedName);
+        return $this->_ctx->get("Resource")->getMemcached($this->memcachedName);
     }
 
     protected function hash(string $str): string
