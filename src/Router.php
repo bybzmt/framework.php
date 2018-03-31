@@ -13,20 +13,10 @@ abstract class Router extends PRouter
     {
         $this->_ctx = $context;
 
-        if (Config::get('routes_cached')) {
-            parent::__construct($this->_restore());
-        } else {
-            $this->_init();
-        }
+        $this->_init();
     }
 
     abstract protected function _init();
-
-    protected function _restore()
-    {
-        $file = ASSETS_PATH . '/compiled/' . str_replace('\\', '_', static::class) . '_routes.php';
-        return require $file;
-    }
 
     public function getMethod()
     {

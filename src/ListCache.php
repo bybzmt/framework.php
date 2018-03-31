@@ -20,14 +20,14 @@ abstract class ListCache extends Cache
         $this->_hashPrefix = $this->key;
     }
 
-    abstract protected function getRows(array $ids):array;
+    abstract protected function findRows(array $ids):array;
 
     abstract protected function loadData(int $limit):array;
 
     public function gets(int $offset, int $length): array
     {
         $ids = array_slice($this->getAllIds(), $offset, $length);
-        return $this->getRows($ids);
+        return $this->findRows($ids);
     }
 
     public function count()

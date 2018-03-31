@@ -84,11 +84,11 @@ class LazyRow extends Component
     {
         $ids = array_keys($this->_ctx->lazyRow[$this->name]);
 
-        $rows = $this->_ctx->get("Table.".$this->name)->gets($ids);
+        $rows = $this->getTable($this->name)->gets($ids);
 
         foreach ($this->_ctx->lazyRow[$this->name] as $id => $lazyRows) {
             if (isset($rows[$id])) {
-                $obj = $this->_ctx->initRow($this->name, $rows[$id]);
+                $obj = $this->_ctx->init("Row\\".$this->name, $rows[$id]);
 
                 foreach ($lazyRows as $lazyRow) {
                     $lazyRow->_do_set_row($obj);

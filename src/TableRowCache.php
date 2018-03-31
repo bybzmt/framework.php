@@ -17,7 +17,7 @@ trait TableRowCache
      */
     public function get(string $id)
     {
-        $row = $this->getCache($id);
+        $row = $this->getCacheData($id);
         if ($row === null) {
             $row = parent::get($id);
             $this->setCache($id, $row);
@@ -109,7 +109,7 @@ trait TableRowCache
     /**
      * 仅从缓存中取得数据
      */
-    public function getCache(string $id)
+    public function getCacheData(string $id)
     {
         return $this->unserialize($this->_ctx->get("Resource")->getMemcached()->get($this->getKey($id)));
     }
