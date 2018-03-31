@@ -1,6 +1,7 @@
 <?php
 namespace Bybzmt\Framework\Helper;
 
+use Bybzmt\Framework\ComponentTrait;
 use Memcached;
 
 /**
@@ -8,6 +9,10 @@ use Memcached;
  */
 class Session implements \ArrayAccess, \Iterator
 {
+    use ComponentTrait;
+
+    private $_ctx;
+
     private $_prefix = "session_";
     private $_expiration = 60*60*2;
 
@@ -16,7 +21,6 @@ class Session implements \ArrayAccess, \Iterator
 
     private $_sid;
     private $_data = array();
-    private $_ctx;
     private $_last;
     private $_now;
 
@@ -34,7 +38,7 @@ class Session implements \ArrayAccess, \Iterator
     {
         $this->init();
         $this->_data = array();
-        return $this->_ctx->get("Resource")->getMemcached()->delete($this->_prefix.$this->_sid);
+        return $this->getHelper("Resource")->getMemcached()->delete($this->_prefix.$this->_sid);
     }
 
     private function init()
@@ -66,13 +70,13 @@ class Session implements \ArrayAccess, \Iterator
 
     private function read()
     {
-        $res = $this->_ctx->get("Resource")->getMemcached()->get($this->_prefix.$this->_sid, null, Memcached::GET_EXTENDED);
+        $res = $this->getHelper("Resource")->getMemcached()->get($this->_prefix.$this->_sid, null, Memcached::GET_EXTENDED);
         if ($res) {
             return $res['value'];
         } else {
             //判断确实未找到,而非memcache服务器出问题了
-            if ($this->_ctx->get("Resource")->getMemcached()->getResultCode() == Memcached::RES_NOTFOUND) {
-                $this->_ctx->get("Helper.Security")->incr_newSession();
+            if ($this->getHelper("Resource")->getMemcached()->getResultCode() == Memcached::RES_NOTFOUND) {
+                $this->getHelper("Security")->incr_newSession();
             }
             return '';
         }
@@ -85,7 +89,7 @@ class Session implements \ArrayAccess, \Iterator
 
             $data = array('last'=>$this->_now, 'data' => $this->_data);
 
-            $this->_ctx->get("Resource")->getMemcached()->set($this->_prefix.$this->_sid, $data, $this->_expiration);
+            $this->getHelper("Resource")->getMemcached()->set($this->_prefix.$this->_sid, $data, $this->_expiration);
         }
     }
 

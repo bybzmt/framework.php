@@ -111,7 +111,7 @@ trait TableRowCache
      */
     public function getCacheData(string $id)
     {
-        return $this->unserialize($this->_ctx->get("Resource")->getMemcached()->get($this->getKey($id)));
+        return $this->unserialize($this->getHelper("Resource")->getMemcached()->get($this->getKey($id)));
     }
 
     /**
@@ -125,7 +125,7 @@ trait TableRowCache
             $keys[$this->getKey($id)] = $id;
         }
 
-        $rows = $this->_ctx->get("Resource")->getMemcached()->getMulti(array_keys($keys), Memcached::GET_PRESERVE_ORDER);
+        $rows = $this->getHelper("Resource")->getMemcached()->getMulti(array_keys($keys), Memcached::GET_PRESERVE_ORDER);
         //Memcached连接失败时会返回false修补下数据
         if (!$rows) {
             $rows = array_combine(array_keys($keys), array_fill(0, count($keys), false));
@@ -146,7 +146,7 @@ trait TableRowCache
     public function updateCache(string $id, $row_or_fn)
     {
         $key = $this->getKey($id);
-        $memcached = $this->_ctx->get("Resource")->getMemcached();
+        $memcached = $this->getHelper("Resource")->getMemcached();
 
         for ($i=0; $i<3; $i++) {
             $res = $memcached->get($key, null, Memcached::GET_EXTENDED);
@@ -199,7 +199,7 @@ trait TableRowCache
     public function setCache(string $id, $row)
     {
         $key = $this->getKey($id);
-        return $this->_ctx->get("Resource")->getMemcached()->set($key, $this->serialize($row), $this->_expiration);
+        return $this->getHelper("Resource")->getMemcached()->set($key, $this->serialize($row), $this->_expiration);
     }
 
     /**
@@ -216,7 +216,7 @@ trait TableRowCache
             $data[$this->getKey($id)] = $this->serialize($row);
         }
 
-        return $this->_ctx->get("Resource")->getMemcached()->setMulti($data, $this->_expiration);
+        return $this->getHelper("Resource")->getMemcached()->setMulti($data, $this->_expiration);
     }
 
     /**
@@ -225,7 +225,7 @@ trait TableRowCache
     public function delCache(string $id): bool
     {
         $key = $this->getKey($id);
-        return $this->_ctx->get("Resource")->getMemcached()->delete($key);
+        return $this->getHelper("Resource")->getMemcached()->delete($key);
     }
 
     /**
@@ -238,7 +238,7 @@ trait TableRowCache
             $key[] = $this->getKey($id);
         }
 
-        return $this->_ctx->get("Resource")->getMemcached()->deleteMulti($key);
+        return $this->getHelper("Resource")->getMemcached()->deleteMulti($key);
     }
 
     protected function getKey(string $id): string

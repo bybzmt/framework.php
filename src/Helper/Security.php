@@ -27,7 +27,7 @@ class Security extends Helper
     protected function get()
     {
         if (!$this->_hold) {
-            $res = $this->_ctx->get("Resource")->getMemcached()->get($this->_cachekey, null, Memcached::GET_EXTENDED);
+            $res = $this->getHelper("Resource")->getMemcached()->get($this->_cachekey, null, Memcached::GET_EXTENDED);
             if ($res) {
                 $this->_cas = $res['cas'];
                 $this->_value = (array)$res['value'];
@@ -44,9 +44,9 @@ class Security extends Helper
     {
         //乐观锁设置
         if ($this->_cas) {
-            $ok = $this->_ctx->get("Resource")->getMemcached()->cas($this->_cas, $this->_cachekey, $val, $this->_expiration);
+            $ok = $this->getHelper("Resource")->getMemcached()->cas($this->_cas, $this->_cachekey, $val, $this->_expiration);
         } else {
-            $ok = $this->_ctx->get("Resource")->getMemcached()->add($this->_cachekey, $val, $this->_expiration);
+            $ok = $this->getHelper("Resource")->getMemcached()->add($this->_cachekey, $val, $this->_expiration);
         }
 
         if (!$ok) {

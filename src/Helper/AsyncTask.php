@@ -43,7 +43,7 @@ class AsyncTask extends Helper
 			$params += $default;
 		}
 
-		$db = $this->_ctx->get("Resource")->getDb("blog_master");
+		$db = $this->getHelper("Resource")->getDb("blog_master");
 		$db->insert('timer_task', array(
 			'run_time' => date('Y-m-d H:i:s', $time),
 			'action' => $action,
