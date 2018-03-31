@@ -6,3 +6,8 @@ tests-report/
 /var/*
 
 !.empty
+
+#vim临时文件
+*.swp
+*~
+*.swo
