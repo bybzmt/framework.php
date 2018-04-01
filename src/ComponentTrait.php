@@ -15,7 +15,7 @@ trait ComponentTrait
     //直接加载一个数据行对像
     protected function getRow(string $name, string $id)
     {
-        $row = $this->_ctx->get("Table\\".$name)->get($id);
+        $row = $this->getTable($name)->get($id);
 
         return $row ? $this->_ctx->init("Row\\".$name, $row) : false;
     }
@@ -23,7 +23,7 @@ trait ComponentTrait
     //批量加载数据行对像
     protected function getRows(string $name, array $ids)
     {
-        $rows = $this->_ctx->get("Table\\".$name)->gets($ids);
+        $rows = $this->getTable($name)->gets($ids);
 
         $obj = array();
         foreach ($rows as $row) {
@@ -72,10 +72,5 @@ trait ComponentTrait
         return $this->_ctx->get("Service\\".$name);
     }
 
-    //连接外部资源
-    protected function getResource($type, ...$args)
-    {
-        return $this->_ctx->get("Resource\\".$type, ...$args);
-    }
 }
 

@@ -1,7 +1,9 @@
 <?php
 namespace Bybzmt\Framework\Helper;
 
-class ValidateCode
+use Bybzmt\Framework\Helper;
+
+class Captcha2 extends Helper
 {
     private $charset = 'abcdefghkmnprstuvwxyzABCDEFGHKMNPRSTUVWXYZ23456789';    //随机字符
     private $code;                           //验证码
@@ -13,17 +15,10 @@ class ValidateCode
     private $fontsize = 15;                  //指定字体大小
     private $fontcolor;                      //指定字体颜色 $white  =  imagecolorallocate ( $im ,  255 ,  255 ,  255 );
 
-    public function __construct($width, $height)
+    public function show()
     {
         $this->font =   ASSETS_PATH.'/fonts/elephant.ttf';
-        $this->width  = $width ? $width : 118;
-        $this->height = $height ? $height : 36;
-
         $this->createCode();
-    }
-
-    public function show($BgColor='',$FontColor='')
-    {
         $this->createBg($BgColor);
         $this->createLine();
         $this->createFont($FontColor);

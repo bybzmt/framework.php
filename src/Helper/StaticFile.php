@@ -1,18 +1,13 @@
 <?php
 namespace Bybzmt\Framework\Helper;
 
+use Bybzmt\Framework\Helper;
+
 /**
  * 响应静态文件
  */
-class StaticFile
+class StaticFile extends Helper
 {
-    private $_ctx;
-
-    public function __construct($context)
-    {
-        $this->_ctx = $context;
-    }
-
     public function readfile($file)
     {
         $size = filesize($file);

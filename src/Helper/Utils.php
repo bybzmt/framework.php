@@ -15,7 +15,6 @@ class Utils extends Helper
     {
         //方便根据环境统一调整
         //return $this->_ctx->request->server['x_forwarded_for'];
-
         return $this->_ctx->request->server['remote_addr'];
     }
 
