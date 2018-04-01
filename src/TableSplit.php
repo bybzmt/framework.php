@@ -57,7 +57,7 @@ class TableSplit extends Table
         $params = array();
         //创建sql
         foreach ($table_ids as $tableName => $ids) {
-            list($sql, $tmp) = $this->_ctx->getHelper("SQLBuilder")->select($this->_columns, $tableName, [$this->_primary=>$ids]);
+            list($sql, $tmp) = $this->getHelper("SQLBuilder")->select($this->_columns, $tableName, [$this->_primary=>$ids]);
 
             $sqls[] = $sql;
             $params = array_merge($params, $tmp);
