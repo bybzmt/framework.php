@@ -3,11 +3,9 @@ namespace Bybzmt\Framework;
 
 abstract class Bootstrap
 {
-    protected $_ctx = array();
-
     public function __construct()
     {
-        set_error_handler(array($this, 'exception_error_handler'));
+        set_error_handler(array($this, 'exception_error_handler'), error_reporting());
     }
 
     public function exception_error_handler($errno, $errstr, $errfile, $errline)
@@ -15,6 +13,9 @@ abstract class Bootstrap
         throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
     }
 
-    abstract public function run($request, $response);
+    //得到上下文对像
+    abstract public function getContext();
 
+    //执行请求
+    abstract public function run($request, $response);
 }
