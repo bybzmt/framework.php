@@ -91,7 +91,7 @@ class Security extends Helper
 
         //记录锁定日志
         $msg = $this->_ip . " " . $key;
-        $this->_ctx->getLogger('security')->info($msg);
+        $this->getHelper("Resource")->getLogger('security')->info($msg);
     }
 
 }

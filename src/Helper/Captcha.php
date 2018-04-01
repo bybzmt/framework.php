@@ -2,6 +2,7 @@
 namespace Bybzmt\Framework\Helper;
 
 use Bybzmt\Framework\Helper;
+use Bybzmt\Framework\Context;
 use Gmagick;
 use GmagickPixel;
 use GmagickDraw;
@@ -25,15 +26,17 @@ class Captcha extends Helper
 	 */
 	protected $fontsize = 25;
 
+    protected $font = ASSETS_PATH.'/fonts/monaco.ttf';
+
 	/**
 	 * 背景色
 	 */
-	protected $backcolor = 'white';
+	protected $backcolor = '#ffffff';
 
 	/**
 	 * 字体顔色
 	 */
-	protected $fontcolor = 'black';
+	protected $fontcolor = '#000000';
 
     protected $code;
 
@@ -49,10 +52,22 @@ class Captcha extends Helper
         return $this->code;
     }
 
+	public function show($fontColor, $backColor)
+    {
+        $this->fontcolor = $fontColor;
+        $this->backcolor = $backColor;
+
+        if (class_exists("Gmagick")) {
+            $this->showGmagick();
+        } else {
+            $this->showGD();
+        }
+    }
+
 	/**
 	 * Gmagick 生成验证码
 	 */
-	public function show()
+	public function showGmagick()
 	{
         $randcode = $this->getCode();
 
@@ -73,7 +88,7 @@ class Captcha extends Helper
 
 		//设置字体
 		$draw->setFontSize($this->fontsize);
-		$draw->setFont(ASSETS_PATH.'/fonts/monaco.ttf');
+		$draw->setFont($this->font);
 
 		for ($i=0; $i<$num; $i++) {
 			$str = mb_substr($randcode, $i, 1);
@@ -122,7 +137,48 @@ class Captcha extends Helper
 
 		$image->setImageFormat('jpg');
 
-        return $image;
+
+        $this->_ctx->response->header("Content-type", "image/jpeg");
+        $this->_ctx->response->end($image);
 	}
 
+    //GD库
+	public function showGD()
+    {
+        $code = $this->getCode();
+        $codelen = strlen($code);
+
+        $img = imagecreatetruecolor($this->width, $this->height);
+
+        $tmp = str_split(trim($this->backcolor, '#'), 2);
+        $backcolor = imagecolorallocate($img, hexdec($tmp[0]), hexdec($tmp[1]), hexdec($tmp[2]));
+
+        imagefilledrectangle($img,0,$this->height,$this->width,0,$backcolor);
+
+        for ($i=0;$i<6;$i++) {
+            $color = imagecolorallocate($img,mt_rand(0,156),mt_rand(0,156),mt_rand(0,156));
+            imageline($img,mt_rand(0,$this->width),mt_rand(0,$this->height),mt_rand(0,$this->width),mt_rand(0,$this->height),$color);
+        }
+        for ($i=0;$i<100;$i++) {
+            $color = imagecolorallocate($img,mt_rand(200,255),mt_rand(200,255),mt_rand(200,255));
+            imagestring($img,mt_rand(1,5),mt_rand(0,$this->width),mt_rand(0,$this->height),'*',$color);
+        }
+
+        $tmp = str_split(trim($this->fontcolor, '#'), 2);
+        $fontcolor = imagecolorallocate($img, hexdec($tmp[0]), hexdec($tmp[1]), hexdec($tmp[2]));
+
+        $_x = $this->width / $codelen;
+        for ($i=0;$i<$codelen;$i++) {
+            imagettftext($img,$this->fontsize,mt_rand(-30,30),$_x*$i+mt_rand(1,5),$this->height / 1.4,$fontcolor,$this->font,$this->code[$i]);
+        }
+
+        $tmpfile = tempnam(sys_get_temp_dir(), 'captcha_');
+        imagejpeg($img, $tmpfile);
+        imagedestroy($img);
+
+        $this->_ctx->response->header("Content-type", "image/jpeg");
+        $this->_ctx->response->sendfile($tmpfile);
+
+        unlink($tmpfile);
+    }
 }
