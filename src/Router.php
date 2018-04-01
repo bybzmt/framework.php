@@ -7,12 +7,8 @@ use Bybzmt\Router\Router as PRouter;
 
 abstract class Router extends PRouter
 {
-    protected $_ctx;
-
     public function __construct($context)
     {
-        $this->_ctx = $context;
-
         $this->_init();
     }
 
@@ -51,23 +47,5 @@ abstract class Router extends PRouter
         return array($class, $method);
     }
 
-    protected function dispatch($func, array $params)
-    {
-        list($class, $method, $keys, $map) = $func;
 
-        //映射参数到$_GET中去
-        $this->_mapGET($params, $keys);
-
-        if (!$this->_loadClass($class)) {
-            throw new Exception("Dispatch '$map' Class:'$class' Not Exists");
-        }
-
-        $obj = new $class($this->_ctx);
-
-        if (!method_exists($obj, $method)) {
-            throw new Exception("Dispatch '$map' Method:'$class::$method' Not Exists");
-        }
-
-        return $obj->$method();
-    }
 }

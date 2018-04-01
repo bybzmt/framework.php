@@ -21,20 +21,11 @@ class Utils extends Helper
     //创建url
     public function mkUrl(string $action, array $params=array(), bool $https=false)
     {
-        if (!$this->_ctx->reverse) {
-            $tool = new \Bybzmt\Router\Tool($this->_ctx->router->getRoutes());
-            $this->_ctx->reverse = new Reverse($tool->convertReverse());
-        }
-
-        $uri = $this->_ctx->reverse->buildUri($action, $params);
+        $uri = $this->_ctx->module->getReverse()->buildUri($action, $params);
 
         $host = Config::get('host.' . $this->_ctx->moduleName);
 
-        if ($https) {
-            return 'https://' . $host . $uri;
-        }
-
-        return 'http://' . $host . $uri;
+        return ($https ? 'https://' : 'http://') . $host . $uri;
     }
 
 }

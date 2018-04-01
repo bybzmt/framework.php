@@ -88,7 +88,7 @@ class LazyRow extends Component
 
         foreach ($this->_ctx->lazyRow[$this->name] as $id => $lazyRows) {
             if (isset($rows[$id])) {
-                $obj = $this->_ctx->init("Row\\".$this->name, $rows[$id]);
+                $obj = $this->initRow($this->name, $rows[$id]);
 
                 foreach ($lazyRows as $lazyRow) {
                     $lazyRow->_do_set_row($obj);

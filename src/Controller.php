@@ -5,6 +5,21 @@ use Throwable;
 
 abstract class Controller extends Component
 {
+    public function getQuery($key)
+    {
+        return isset($this->_ctx->request->get[$key]) ? $this->_ctx->request->get[$key] : null;
+    }
+
+    public function getPost($key)
+    {
+        return isset($this->_ctx->request->post[$key]) ? $this->_ctx->request->post[$key] : null;
+    }
+
+    public function getCookie($key)
+    {
+        return isset($this->_ctx->request->cookie[$key]) ? $this->_ctx->request->cookie[$key] : null;
+    }
+
     public function execute()
     {
         try {

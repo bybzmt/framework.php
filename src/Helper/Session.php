@@ -34,6 +34,40 @@ class Session implements \ArrayAccess, \Iterator
         $this->save();
     }
 
+    public function get($key)
+    {
+        return $this->offsetGet($key);
+    }
+
+    public function set($key, $val)
+    {
+        $this->offsetSet($key, $val);
+    }
+
+    public function flash($key)
+    {
+        if ($this->offsetExists($key)) {
+            $val = $this->offsetGet($key);
+
+            $this->offsetUnset($key);
+
+            return $val;
+        }
+
+        return null;
+    }
+
+    public function save()
+    {
+        if ($this->_change) {
+            $this->_change = false;
+
+            $data = array('last'=>$this->_now, 'data' => $this->_data);
+
+            $this->getHelper("Resource")->getMemcached()->set($this->_prefix.$this->_sid, $data, $this->_expiration);
+        }
+    }
+
     public function destroy()
     {
         $this->init();
@@ -82,21 +116,6 @@ class Session implements \ArrayAccess, \Iterator
         }
     }
 
-    public function save()
-    {
-        if ($this->_change) {
-            $this->_change = false;
-
-            $data = array('last'=>$this->_now, 'data' => $this->_data);
-
-            $this->getHelper("Resource")->getMemcached()->set($this->_prefix.$this->_sid, $data, $this->_expiration);
-        }
-    }
-
-    public function get($key)
-    {
-        return $this->offsetGet($key);
-    }
 
     private function create_sid()
     {

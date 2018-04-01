@@ -7,16 +7,13 @@ namespace Bybzmt\Framework;
 class Context
 {
     public $moduleName;
+    public $module;
 
     //请求对像
     public $request;
 
     //响应对像
     public $response;
-
-    //路由
-    public $router;
-    public $reverse;
 
     //组件
     public $components = array();

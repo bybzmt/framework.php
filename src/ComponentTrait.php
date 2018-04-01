@@ -12,12 +12,17 @@ trait ComponentTrait
         return $attr;
     }
 
+    protected function initRow($name, $row)
+    {
+        return $this->_ctx->init("Row\\".$name, $row);
+    }
+
     //直接加载一个数据行对像
     protected function getRow(string $name, string $id)
     {
         $row = $this->getTable($name)->get($id);
 
-        return $row ? $this->_ctx->init("Row\\".$name, $row) : false;
+        return $row ? $this->initRow($name, $row) : false;
     }
 
     //批量加载数据行对像
@@ -27,7 +32,7 @@ trait ComponentTrait
 
         $obj = array();
         foreach ($rows as $row) {
-            $obj[] = $this->_ctx->init("Row\\".$name, $row);
+            $obj[] = $this->initRow($name, $row);
         }
         return $obj;
     }

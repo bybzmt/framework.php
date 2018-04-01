@@ -94,4 +94,12 @@ class Security extends Helper
         $this->getHelper("Resource")->getLogger('security')->info($msg);
     }
 
+    //新会话产生次数
+    public function incr_newSession()
+    {
+        $num = $this->incr(__FUNCTION__);
+        if ($num > 100) {
+            $this->setLocked(__FUNCTION__);
+        }
+    }
 }
