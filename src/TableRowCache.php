@@ -15,12 +15,12 @@ trait TableRowCache
     /**
      * 得到数据,缓存未命中时从数据库中加载
      */
-    public function get(string $id)
+    public function get($id)
     {
         $row = $this->getCacheData($id);
         if ($row === null) {
             $row = parent::get($id);
-            $this->setCache($id, $row);
+            $this->setRowCache($id, $row);
         }
         return $row;
     }
@@ -32,7 +32,7 @@ trait TableRowCache
     {
         $out = $miss = array();
 
-        foreach ($this->getCaches($ids) as $id=>$row) {
+        foreach ($this->getRowCaches($ids) as $id=>$row) {
             if ($row) {
                 $out[$id] = $row;
             } else if ($row===null) {
@@ -54,7 +54,7 @@ trait TableRowCache
                 }
             }
 
-            $this->setCaches($new_caches);
+            $this->setRowCaches($new_caches);
         }
 
         return $out;
@@ -76,9 +76,9 @@ trait TableRowCache
 
             //字段数量一至时直接缓存，否则仅册除缓存
             if (count($row) == count($this->_columns)) {
-                $this->setCache($key, $row);
+                $this->setRowCache($key, $row);
             } else {
-                $this->delCache($key);
+                $this->delRowCache($key);
             }
         }
 
@@ -86,7 +86,7 @@ trait TableRowCache
     }
 
     //修改数据(同时更新数据库和缓存)
-    public function update(string $id, array $row)
+    public function update($id, array $row)
     {
         $ok = parent::update($id, $row);
         if ($ok) {
@@ -96,12 +96,12 @@ trait TableRowCache
     }
 
     //删除数据(同时更新数据库和缓存)
-    public function delete(string $id)
+    public function delete($id)
     {
         $ok = parent::delete($id);
         if ($ok) {
             //缓存数据
-            $this->setCache($id, false);
+            $this->setRowCache($id, false);
         }
         return $ok;
     }
@@ -109,7 +109,7 @@ trait TableRowCache
     /**
      * 仅从缓存中取得数据
      */
-    public function getCacheData(string $id)
+    public function getCacheData($id)
     {
         return $this->unserialize($this->getHelper("Resource")->getMemcached()->get($this->getKey($id)));
     }
@@ -117,7 +117,7 @@ trait TableRowCache
     /**
      * 批量得到数据,仅从缓存中加载
      */
-    public function getCaches(array $ids)
+    public function getRowCaches(array $ids)
     {
         $keys = $out = [];
 
@@ -143,7 +143,7 @@ trait TableRowCache
      *
      * @param $row k/v数组或回调函数function(array $row):array
      */
-    public function updateCache(string $id, $row_or_fn)
+    public function updateCache($id, $row_or_fn)
     {
         $key = $this->getKey($id);
         $memcached = $this->getHelper("Resource")->getMemcached();
@@ -196,7 +196,7 @@ trait TableRowCache
     /**
      * 直接设置缓存
      */
-    public function setCache(string $id, $row)
+    public function setRowCache($id, $row)
     {
         $key = $this->getKey($id);
         return $this->getHelper("Resource")->getMemcached()->set($key, $this->serialize($row), $this->_expiration);
@@ -205,7 +205,7 @@ trait TableRowCache
     /**
      * 批量设置缓存
      */
-    public function setCaches(array $rows)
+    public function setRowCaches(array $rows)
     {
         if (!$rows) {
             return true;
@@ -222,7 +222,7 @@ trait TableRowCache
     /**
      * 删除缓存
      */
-    public function delCache(string $id): bool
+    public function delRowCache($id): bool
     {
         $key = $this->getKey($id);
         return $this->getHelper("Resource")->getMemcached()->delete($key);
@@ -231,7 +231,7 @@ trait TableRowCache
     /**
      * 批量删除缓存
      */
-    public function delCaches(array $ids): bool
+    public function delRowCaches(array $ids): bool
     {
         $keys = [];
         foreach ($ids as $id) {
@@ -241,7 +241,7 @@ trait TableRowCache
         return $this->getHelper("Resource")->getMemcached()->deleteMulti($key);
     }
 
-    protected function getKey(string $id): string
+    protected function getKey($id): string
     {
         if (!$this->_keyPrefix) {
             $this->_keyPrefix = static::class;

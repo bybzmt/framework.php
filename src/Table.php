@@ -21,7 +21,7 @@ abstract class Table extends Component
     /**
      * 按主键查找一行数据
      */
-    public function get(string $id)
+    public function get($id)
     {
         $sql = "SELECT `".implode("`,`", $this->_columns)."`
             FROM `{$this->_tableName}` WHERE `{$this->_primary}` = ?";
@@ -64,7 +64,7 @@ abstract class Table extends Component
         return $affected;
     }
 
-    public function update(string $id, array $row)
+    public function update($id, array $row)
     {
         if (!$row) {
             return false;
@@ -75,7 +75,7 @@ abstract class Table extends Component
         return $this->exec($sql, $vals);
     }
 
-    public function delete(string $id)
+    public function delete($id)
     {
 		$sql = "DELETE FROM `{$this->_tableName}` WHERE `{$this->_primary}` = ? LIMIT 1";
 

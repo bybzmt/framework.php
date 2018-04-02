@@ -25,7 +25,7 @@ class TableSplit extends Table
         $this->_tableName = $this->_tablePrefix . $hash->lookup($split_id);
     }
 
-    public function get(string $key)
+    public function get($key)
     {
         list($split_id, $id) = explode(":", $key.":");
 
@@ -94,7 +94,7 @@ class TableSplit extends Table
         return parent::insert($row);
     }
 
-    public function update(string $key, array $row)
+    public function update($key, array $row)
     {
         list($split_id, $id) = explode(":", $key.":");
 
@@ -103,7 +103,7 @@ class TableSplit extends Table
         return parent::update($id, $row);
     }
 
-    public function delete(string $key)
+    public function delete($key)
     {
         list($split_id, $id) = explode(":", $key.":");
 

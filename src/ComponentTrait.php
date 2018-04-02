@@ -18,7 +18,7 @@ trait ComponentTrait
     }
 
     //直接加载一个数据行对像
-    protected function getRow(string $name, string $id)
+    protected function getRow(string $name, $id)
     {
         $row = $this->getTable($name)->get($id);
 
@@ -38,7 +38,7 @@ trait ComponentTrait
     }
 
     //惰性加载一个数据行对像
-    protected function getLazyRow(string $name, string $id)
+    protected function getLazyRow(string $name, $id)
     {
         return new LazyRow($this->_ctx, $name, $id);
     }

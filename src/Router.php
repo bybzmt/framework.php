@@ -14,23 +14,6 @@ abstract class Router extends PRouter
 
     abstract protected function _init();
 
-    public function getMethod()
-    {
-        return $this->_ctx->request->server['request_method'];
-    }
-
-    public function getURI()
-    {
-        $uri = parse_url($this->_ctx->request->server['request_uri'], PHP_URL_PATH);
-
-        $len = strlen($this->getBasePath());
-        if ($len > 0) {
-            $uri = substr($uri, $len);
-        }
-
-        return $uri;
-    }
-
     protected function _parseClass($map)
     {
         static $names;
