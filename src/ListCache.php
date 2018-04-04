@@ -3,42 +3,26 @@ namespace Bybzmt\Framework;
 
 abstract class ListCache extends Cache
 {
-    //缓存过期时间
-    protected $expiration = 1800;
-
     //缓存的最大id数量
-    protected $size = 10000;
-
-    //列表缓存id
-    protected $list_id;
-
-    public function __construct(Context $context, string $list_id='')
-    {
-        $this->_ctx = $context;
-        $this->list_id = $list_id;
-        $this->key = str_replace('\\', '.', static::class) .'.'. $list_id;
-        $this->_hashPrefix = $this->key;
-    }
+    protected $size = 3000;
 
     abstract protected function findRows(array $ids):array;
 
-    abstract protected function loadData(int $limit):array;
-
-    public function gets(int $offset, int $length): array
+    public function getlist(int $offset, int $length): array
     {
-        $ids = array_slice($this->getAllIds(), $offset, $length);
+        $ids = array_slice($this->get(), $offset, $length);
         return $this->findRows($ids);
     }
 
     public function count()
     {
-        return count($this->getAllIds());
+        return count($this->get());
     }
 
     //用于一个值插入到列表的头部(最左边)
-    public function itemLPush(string $id) : bool
+    public function itemLPush($id) : bool
     {
-        $ids = $this->getAllIds();
+        $ids = $this->get();
         $ids = array_diff($ids, [$id]);
 
         array_unshift($ids, $id);
@@ -51,9 +35,9 @@ abstract class ListCache extends Cache
     }
 
     //用于一个值插入到列表的尾部(最右边)
-    public function itemRPush(string $id) : bool
+    public function itemRPush($id) : bool
     {
-        $ids = $this->getAllIds();
+        $ids = $this->get();
         $ids = array_diff($ids, [$id]);
 
         array_push($ids, $id);
@@ -65,30 +49,10 @@ abstract class ListCache extends Cache
         return $this->setAllIds($ids);
     }
 
-    public function delItem(string $id) : bool
+    public function delItem($id) : bool
     {
-        $ids = array_diff($this->getAllIds(), [$id]);
+        $ids = array_diff($this->get(), [$id]);
         return $this->setAllIds($ids);
-    }
-
-    public function getAllIds()
-    {
-        $ids = $this->unserialize($this->getMemcached()->get($this->key));
-        if ($ids === null) {
-            $ids = $this->loadData($this->size);
-            $this->setAllIds($ids);
-        }
-        return $ids;
-    }
-
-    public function setAllIds(array $ids)
-    {
-        return $this->getMemcached()->set($this->key, $this->serialize($ids), $this->expiration);
-    }
-
-    public function del()
-    {
-        return $this->getMemcached()->delete($this->key);
     }
 
 

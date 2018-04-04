@@ -12,11 +12,6 @@ abstract class Bootstrap
     //反向路由
     protected $reverse;
 
-    public function __construct()
-    {
-        set_error_handler(array($this, 'exception_error_handler'), error_reporting());
-    }
-
     //得到上下文对像
     abstract public function getContext();
 
@@ -28,6 +23,8 @@ abstract class Bootstrap
     //执行请求
     public function run($request, $response)
     {
+        set_error_handler(array($this, 'exception_error_handler'), error_reporting());
+
         $ctx = $this->getContext();
         $ctx->request = $request;
         $ctx->response = $response;
@@ -57,7 +54,7 @@ abstract class Bootstrap
     protected function getRouter()
     {
         if (!$this->router) {
-            $this->router = $this->getContext()->init("Router");
+            $this->router = $this->getContext()->initComponent("Router");
         }
 
         return $this->router;

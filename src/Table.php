@@ -18,6 +18,16 @@ abstract class Table extends Component
     //表字段
     protected $_columns;
 
+    public function __construct(Context $context)
+    {
+        parent::__construct($context);
+        $this->_init();
+    }
+
+    protected function _init()
+    {
+    }
+
     /**
      * 按主键查找一行数据
      */

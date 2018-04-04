@@ -11,10 +11,10 @@ abstract class Row extends Component
             $this->$key = $val;
         }
 
-        $this->init();
+        $this->_init();
     }
 
-    protected function init()
+    protected function _init()
     {
     }
 

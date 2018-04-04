@@ -14,7 +14,7 @@ trait ComponentTrait
 
     protected function initRow($name, $row)
     {
-        return $this->_ctx->init("Row\\".$name, $row);
+        return $this->_ctx->initComponent("Row\\".$name, $row);
     }
 
     //直接加载一个数据行对像
@@ -53,28 +53,28 @@ trait ComponentTrait
         return $obj;
     }
 
-    //得到缓存组件
-    protected function getCache(string $name, $id='')
+    //加载服务组件
+    protected function getService($name)
     {
-        return $this->_ctx->get("Cache\\".$name, $id);
+        return $this->_ctx->getComponent("Service\\".$name);
     }
 
     //加载表组件
     protected function getTable($name)
     {
-        return $this->_ctx->get("Table\\".$name);
+        return $this->_ctx->getComponent("Table\\".$name);
     }
 
-    //加载组手组件
+    //加载助手组件
     protected function getHelper($name)
     {
-        return $this->_ctx->get("Helper\\".$name);
+        return $this->_ctx->getComponent("Helper\\".$name);
     }
 
-    //加载服务组件
-    protected function getService($name)
+    //得到缓存组件
+    protected function getCache(string $name, ...$args)
     {
-        return $this->_ctx->get("Service\\".$name);
+        return $this->_ctx->initComponent("Cache\\".$name, ...$args);
     }
 
 }

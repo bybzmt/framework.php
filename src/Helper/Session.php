@@ -1,18 +1,14 @@
 <?php
 namespace Bybzmt\Framework\Helper;
 
-use Bybzmt\Framework\ComponentTrait;
+use Bybzmt\Framework\Helper;
 use Memcached;
 
 /**
  * 安全
  */
-class Session implements \ArrayAccess, \Iterator
+class Session extends Helper implements \ArrayAccess, \Iterator
 {
-    use ComponentTrait;
-
-    private $_ctx;
-
     private $_prefix = "session_";
     private $_expiration = 60*60*2;
 
@@ -23,11 +19,6 @@ class Session implements \ArrayAccess, \Iterator
     private $_data = array();
     private $_last;
     private $_now;
-
-    public function __construct($context)
-    {
-        $this->_ctx = $context;
-    }
 
     public function __destruct()
     {

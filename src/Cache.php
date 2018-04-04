@@ -3,26 +3,46 @@ namespace Bybzmt\Framework;
 
 abstract class Cache extends Component
 {
-    protected $_ctx;
+    //使用哪个memcached
+    protected $memcachedName = 'default';
 
     //缓存过期时间
     protected $expiration = 1800;
 
-    //key前缀
-    protected $keyPrefix;
+    //缓存key
+    protected $key;
 
-    //hash前缀
-    protected $hashPrefix;
-
-    //使用哪个memcached
-    protected $memcachedName = 'default';
-
-    public function __construct(Context $context, string $id='')
+    public function __construct(Context $ctx, ...$args)
     {
-        $this->_ctx = $context;
-        $this->id = $id;
-        $this->keyPrefix = str_replace('\\', '.', static::class) .'.'. $id;
-        $this->hashPrefix = $this->keyPrefix;
+        parent::__construct($ctx);
+
+        $this->key = strtr(static::class, '\\', '.');
+
+        if (method_exists($this, '_init')) {
+            $this->_init(...$args);
+        }
+    }
+
+    abstract protected function load();
+
+    public function get()
+    {
+        $data = $this->unserialize($this->getMemcached()->get($this->key));
+        if ($data === null) {
+            $data = $this->load();
+            $this->set($data);
+        }
+        return $data;
+    }
+
+    public function set($data)
+    {
+        return $this->getMemcached()->set($this->key, $this->serialize($data), $this->expiration);
+    }
+
+    public function del()
+    {
+        return $this->getMemcached()->delete($this->key);
     }
 
     protected function getMemcached()
@@ -32,7 +52,7 @@ abstract class Cache extends Component
 
     protected function hash(string $str): string
     {
-        return hash("crc32b", $this->hashPrefix.$str);
+        return hash("crc32b", $this->key.$str);
     }
 
     protected function serialize($data)
