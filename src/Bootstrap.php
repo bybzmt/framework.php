@@ -6,6 +6,9 @@ use Bybzmt\Router\Reverse;
 
 abstract class Bootstrap
 {
+    //模块名字
+    public $name;
+
     //路由
     protected $router;
 

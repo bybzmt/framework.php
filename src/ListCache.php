@@ -31,7 +31,7 @@ abstract class ListCache extends Cache
             array_pop($ids);
         }
 
-        return $this->setAllIds($ids);
+        return $this->set($ids);
     }
 
     //用于一个值插入到列表的尾部(最右边)
@@ -46,13 +46,13 @@ abstract class ListCache extends Cache
             array_shift($ids);
         }
 
-        return $this->setAllIds($ids);
+        return $this->set($ids);
     }
 
     public function delItem($id) : bool
     {
         $ids = array_diff($this->get(), [$id]);
-        return $this->setAllIds($ids);
+        return $this->set($ids);
     }
 
 

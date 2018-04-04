@@ -6,7 +6,7 @@ namespace Bybzmt\Framework;
  */
 class Context
 {
-    public $moduleName;
+    //模块对像
     public $module;
 
     //请求对像
@@ -36,6 +36,11 @@ class Context
         }
 
         return $this->components[$name];
+    }
+
+    public function now()
+    {
+        return $this->request->server['request_time'];
     }
 
 }

@@ -24,10 +24,26 @@ class Security extends Helper
         $this->_cachekey .= "-" . $this->_ip;
     }
 
+    public function isLocked() :bool
+    {
+        $val= $this->get();
+        return isset($val['isLocked']) ? $val['isLocked'] : false;
+    }
+
+    protected function cache()
+    {
+        return $this->getHelper("Resource")->getMemcached();
+    }
+
+    protected function loginfo($msg)
+    {
+        $this->getHelper("Resource")->getLogger('security')->info($msg);
+    }
+
     protected function get()
     {
         if (!$this->_hold) {
-            $res = $this->getHelper("Resource")->getMemcached()->get($this->_cachekey, null, Memcached::GET_EXTENDED);
+            $res = $this->cache()->get($this->_cachekey, null, Memcached::GET_EXTENDED);
             if ($res) {
                 $this->_cas = $res['cas'];
                 $this->_value = (array)$res['value'];
@@ -44,9 +60,9 @@ class Security extends Helper
     {
         //乐观锁设置
         if ($this->_cas) {
-            $ok = $this->getHelper("Resource")->getMemcached()->cas($this->_cas, $this->_cachekey, $val, $this->_expiration);
+            $ok = $this->cache()->cas($this->_cas, $this->_cachekey, $val, $this->_expiration);
         } else {
-            $ok = $this->getHelper("Resource")->getMemcached()->add($this->_cachekey, $val, $this->_expiration);
+            $ok = $this->cache()->add($this->_cachekey, $val, $this->_expiration);
         }
 
         if (!$ok) {
@@ -62,7 +78,7 @@ class Security extends Helper
         return $ok;
     }
 
-    protected function incr(string $key) :int
+    protected function _incr(string $key) :int
     {
         do {
             $val = $this->get();
@@ -75,13 +91,7 @@ class Security extends Helper
         return $val[$key];
     }
 
-    public function isLocked() :bool
-    {
-        $val= $this->get();
-        return isset($val['isLocked']) ? $val['isLocked'] : false;
-    }
-
-    public function setLocked(string $key)
+    protected function _setLocked(string $key)
     {
         do {
             $val = $this->get();
@@ -90,16 +100,21 @@ class Security extends Helper
         } while(!$this->set($val));
 
         //记录锁定日志
-        $msg = $this->_ip . " " . $key;
-        $this->getHelper("Resource")->getLogger('security')->info($msg);
+        $this->loginfo($this->_ip . " " . $key);
+    }
+
+    //检查某项测试是否超过最大数值
+    public function check(string $key, int $max)
+    {
+        $num = $this->_incr($key);
+        if ($num > $max) {
+            $this->_setLocked($key);
+        }
     }
 
     //新会话产生次数
     public function incr_newSession()
     {
-        $num = $this->incr(__FUNCTION__);
-        if ($num > 100) {
-            $this->setLocked(__FUNCTION__);
-        }
+        $this->check(__FUNCTION__, 100);
     }
 }

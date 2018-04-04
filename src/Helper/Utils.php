@@ -10,11 +10,18 @@ use Bybzmt\Router\Reverse;
  */
 class Utils extends Helper
 {
-    //取得IP
+    //取得IP, 方便根据环境统一调整
     public function getIP()
     {
-        //方便根据环境统一调整
-        //return $this->_ctx->request->server['x_forwarded_for'];
+        if (Config::get('x_forwarded_for')) {
+            if (isset($this->_ctx->request->header['x_forwarded_for'])) {
+                list($ip) = explode(',', $this->_ctx->request->header['x_forwarded_for'], 2);
+                if ($ip) {
+                    return $ip;
+                }
+            }
+        }
+
         return $this->_ctx->request->server['remote_addr'];
     }
 
@@ -23,7 +30,7 @@ class Utils extends Helper
     {
         $uri = $this->_ctx->module->getReverse()->buildUri($action, $params);
 
-        $host = Config::get('host.' . $this->_ctx->moduleName);
+        $host = Config::get('host.' . $this->_ctx->module->name);
 
         return ($https ? 'https://' : 'http://') . $host . $uri;
     }
