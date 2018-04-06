@@ -1,6 +1,9 @@
 <?php
 namespace Bybzmt\Framework;
 
+/**
+ * Service公共基类
+ */
 abstract class Service extends Component
 {
     public function __construct(Context $context)

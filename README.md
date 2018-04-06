@@ -1,4 +1,4 @@
-PHP Frameword
+PHP Framework
 ========
 这是一个用于中小型团队开发的框架
 
@@ -76,7 +76,7 @@ PHP Frameword
 Context上下文对像
 ----
 由于Swoole是一种常驻内存模式，全局变量的生命周期是应用级，而不同于fpm模式下只是请求级的。
-全局变量在能在不同请求内保持，所以$_GET、$_POST等原方法都不能用了。
+全局变量能在不同请求间保持，所以$_GET、$_POST等原方法都不能用了。
 这里框架给每个请求实例化一个Context对像，将所有跟当前请求相关的数据存到Context对像中。
 
 Context对像还负责组件按层级加载和替换功能。
@@ -103,33 +103,6 @@ Response对像同样是直接使用[swoole_http_response](https://wiki.swoole.co
 
 在Fpm模式中框架实现一个兼容层保持了和Swoole中一样的api
 
-业务组织模型
-------
-框架推荐使用领域模型模式，使用: Service、Table、Row(Domain)结构
-
-* Service层主要是按大的模块划分，如Blog模块，用户模块主要是负责“启头”和各种不方便划分到领域对像中的业务
-* Table层只负责数据工作，包括sql组织，缓存维护，分表分库工作等
-* Row层则是业务层
-
-需要注意的是不要把数据展示的工作写到Service、Table、Row中去，它位只负责提供最基本的数据，
-按页面、api要求组织对应的数据结构应该在控制器、视图中实现
-
-模板
------
-框架没有提供模板功能，建议直接使现现有第三方模板程序。(如:Twig)
-
-助手层
------
-框架提供了一些常用功能方便使用
-
-* Captcha 验证码生成
-* Resource 资源获取 (如: mysql)
-* Security 安全限制
-* Session 会话机制(替代$_SESSION)
-* SQLBuilder sql构建工具
-* StaticFile 响应静态文件
-* Utils 实用工具
-
 组件
 ------
 框架里把所有跟Context对像有关的对像都实现为了Component,
@@ -146,6 +119,55 @@ Response对像同样是直接使用[swoole_http_response](https://wiki.swoole.co
 路由项目位于[bybzmt/router.php](https://github.com/bybzmt/router.php)
 
 如果不喜欢可以替换为你喜欢的库，框架替换组件非常简单。
+
+业务模型
+------
+框架推荐使用领域模型模式，使用: Service、Table、Row(Domain)结构
+
+* Service层主要是按大的模块划分，如Blog模块，用户模块主要是负责“启头”和各种不方便划分到领域对像中的业务
+* Table层只负责数据工作，包括sql组织，缓存维护，分表分库工作等
+* Row层则是业务层
+
+需要注意的是不要把数据展示的工作写到Service、Table、Row中去，它位只负责提供最基本的数据，
+按页面、api要求组织对应的数据结构应该在控制器、视图中实现
+
+数据库
+-----
+数据库分为提供基础功能的Table类，提供分表功能的TableSplit类。
+另外有提供缓存功能的TableRowCache trait。
+任何用户的表应都该继承于Table或TableSplit类，并当需要缓存时引入TableRowCache trait即可。
+
+![Table概况](./doc/table.svg)
+
+注意分表和缓存都只是对Table类中的get/gets/insert/update/delete这几个操作进行了支持。
+当用SQL直接进行数据操作时需要手动维护相关缓存或分表功能。
+
+批量加载
+------
+框架提供了LazyRow加载方法，当实例化时只是记录id，到访问属性才再试图批量加载。
+* 优点：可以转一般的循环中的单条加载变为批量加载
+* 缺点：当对应的id查无此记录时，LazyRow实例化，需作额外判断
+
+助手层
+-----
+框架提供了一些常用功能方便使用
+
+* Captcha 验证码生成
+* Resource 资源获取 (如: mysql)
+* Security 安全限制
+* Session 会话机制(替代$_SESSION)
+* SQLBuilder sql构建工具
+* StaticFile 响应静态文件
+* Utils 实用工具
+
+Cache缓存
+------
+这个缓存跟上面Table中的缓存没有关系，它是指用户自己维护的缓存。
+尽量让不同类型的缓存用不同的类去管理，避免key冲突。
+
+模板
+-----
+框架没有提供模板功能，建议直接使现现有第三方模板程序。(如:Twig)
 
 写在最后
 -----

@@ -13,6 +13,9 @@ class TableSplit extends Table
     protected $_tablePrefix;
     protected $_tableNum;
 
+    /**
+     * 设置分表
+     */
     protected function _setTable(string $split_id)
     {
         //一至性hash
@@ -25,6 +28,7 @@ class TableSplit extends Table
         $this->_tableName = $this->_tablePrefix . $hash->lookup($split_id);
     }
 
+    //得到一行数据
     public function get($key)
     {
         list($split_id, $id) = explode(":", $key.":");
@@ -34,6 +38,7 @@ class TableSplit extends Table
         return parent::get($id);
     }
 
+    //批量得到数据
     public function gets(array $keys)
     {
         if (!$keys) {
@@ -75,6 +80,7 @@ class TableSplit extends Table
         return $out;
     }
 
+    //插入一条数据
     public function insert(array $row)
     {
         if (!isset($row[$this->_primary])) {
@@ -94,6 +100,7 @@ class TableSplit extends Table
         return parent::insert($row);
     }
 
+    //修改一条数据
     public function update($key, array $row)
     {
         list($split_id, $id) = explode(":", $key.":");
@@ -103,6 +110,7 @@ class TableSplit extends Table
         return parent::update($id, $row);
     }
 
+    //删除一条数据
     public function delete($key)
     {
         list($split_id, $id) = explode(":", $key.":");
@@ -112,6 +120,7 @@ class TableSplit extends Table
         return parent::delete($id);
     }
 
+    //利于数据库维护自增id
     protected function _autoIncrement(int $num=1)
     {
         $tableName = $this->_tablePrefix . "id";

@@ -5,7 +5,7 @@ use Bybzmt\Framework\Helper;
 use Memcached;
 
 /**
- * 安全
+ * Session对像
  */
 class Session extends Helper implements \ArrayAccess, \Iterator
 {
@@ -25,16 +25,21 @@ class Session extends Helper implements \ArrayAccess, \Iterator
         $this->save();
     }
 
+    //得到key
     public function get($key)
     {
         return $this->offsetGet($key);
     }
 
+    //设置key
     public function set($key, $val)
     {
         $this->offsetSet($key, $val);
     }
 
+    /**
+     * 取得key，同时删除key
+     */
     public function flash($key)
     {
         if ($this->offsetExists($key)) {
@@ -48,6 +53,7 @@ class Session extends Helper implements \ArrayAccess, \Iterator
         return null;
     }
 
+    //保存Session
     public function save()
     {
         if ($this->_change) {
@@ -59,6 +65,7 @@ class Session extends Helper implements \ArrayAccess, \Iterator
         }
     }
 
+    //销毁Session
     public function destroy()
     {
         $this->init();
@@ -66,6 +73,7 @@ class Session extends Helper implements \ArrayAccess, \Iterator
         return $this->getHelper("Resource")->getMemcached()->delete($this->_prefix.$this->_sid);
     }
 
+    //初始化数据
     private function init()
     {
         if ($this->_init) {
@@ -106,7 +114,6 @@ class Session extends Helper implements \ArrayAccess, \Iterator
             return '';
         }
     }
-
 
     private function create_sid()
     {

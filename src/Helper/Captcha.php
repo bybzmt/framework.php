@@ -7,6 +7,9 @@ use Gmagick;
 use GmagickPixel;
 use GmagickDraw;
 
+/**
+ * 生成验证码
+ */
 class Captcha extends Helper
 {
     private $charset = 'abcdefghkmnprstuvwxyzABCDEFGHKMNPRSTUVWXYZ1234567890';
@@ -57,7 +60,7 @@ class Captcha extends Helper
         $this->fontcolor = $fontColor;
         $this->backcolor = $backColor;
 
-        if (class_exists("Gmagick")) {
+        if (class_exists("Gmagick", false)) {
             $this->showGmagick();
         } else {
             $this->showGD();

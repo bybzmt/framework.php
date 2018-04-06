@@ -241,6 +241,7 @@ trait TableRowCache
         return $this->getHelper("Resource")->getMemcached()->deleteMulti($key);
     }
 
+    //得到缓存key
     protected function getKey($id): string
     {
         if (!$this->_keyPrefix) {
@@ -250,6 +251,7 @@ trait TableRowCache
         return $this->_keyPrefix .":". $id;
     }
 
+    //序列化数据
     protected function serialize($data)
     {
         $str = serialize($data);
@@ -257,6 +259,7 @@ trait TableRowCache
         return $this->hash($str) . $str;
     }
 
+    //反序列化数据
     protected function unserialize($data)
     {
         if (!is_string($data) || !$data) {
@@ -279,6 +282,7 @@ trait TableRowCache
         return unserialize($str);
     }
 
+    //对数据求hash
     protected function hash(string $str): string
     {
         if (!$this->_hashPrefix) {

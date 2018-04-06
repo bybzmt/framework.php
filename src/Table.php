@@ -55,6 +55,9 @@ abstract class Table extends Component
         return array_column($rows, null, $this->_primary);
     }
 
+    /**
+     * 插入一行数据
+     */
     public function insert(array $row)
     {
         if (!$row) {
@@ -74,6 +77,9 @@ abstract class Table extends Component
         return $affected;
     }
 
+    /**
+     * 按主键修改一行数据
+     */
     public function update($id, array $row)
     {
         if (!$row) {
@@ -85,6 +91,9 @@ abstract class Table extends Component
         return $this->exec($sql, $vals);
     }
 
+    /**
+     * 删除一行数据
+     */
     public function delete($id)
     {
 		$sql = "DELETE FROM `{$this->_tableName}` WHERE `{$this->_primary}` = ? LIMIT 1";
@@ -92,11 +101,17 @@ abstract class Table extends Component
         return $this->exec($sql, [$id]);
     }
 
+    /**
+     * 得到数据库连接
+     */
     protected function getDB(bool $isMaster=false)
     {
         return $this->getHelper("Resource")->getDb($this->_dbName . ($isMaster?'_master':'_slave'));
     }
 
+    /**
+     * 执行SQL查询(默认从库)
+     */
     protected function query(string $sql, array $params=[], bool $isMaster=false):PDOStatement
     {
         if ($params) {
@@ -116,6 +131,9 @@ abstract class Table extends Component
         }
     }
 
+    /**
+     * 执行SQL修改(默认主库)
+     */
     protected function exec(string $sql, array $params=[])
     {
         if ($params) {

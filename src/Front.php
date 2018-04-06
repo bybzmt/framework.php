@@ -4,8 +4,10 @@ namespace Bybzmt\Framework;
 use Bybzmt\Framework\Sapi\Phpfpm\Request;
 use Bybzmt\Framework\Sapi\Phpfpm\Response;
 use swoole_http_server;
-use swoole_lock;
 
+/**
+ * 前端控制器
+ */
 class Front
 {
     private $_moduleMap;
@@ -51,6 +53,7 @@ class Front
         $http->on('request', function ($request, $response) {
             $host = isset($request->header['host']) ? $request->header['host'] : null;
 
+            //此模式下Bootstrap对像是常驻内存的
             $module = isset($this->_modules[$host]) ? $this->_modules[$host] : $this->_modules[$host] = call_user_func($this->_moduleMap, $host);
 
             $module->run($request, $response);

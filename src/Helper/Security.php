@@ -24,10 +24,26 @@ class Security extends Helper
         $this->_cachekey .= "-" . $this->_ip;
     }
 
+    //判断是否己锁定
     public function isLocked() :bool
     {
         $val= $this->get();
         return isset($val['isLocked']) ? $val['isLocked'] : false;
+    }
+
+    //检查某项测试是否超过最大数值
+    public function check(string $key, int $max)
+    {
+        $num = $this->_incr($key);
+        if ($num > $max) {
+            $this->_setLocked($key);
+        }
+    }
+
+    //新会话产生次数
+    public function incr_newSession()
+    {
+        $this->check(__FUNCTION__, 100);
     }
 
     protected function cache()
@@ -103,18 +119,4 @@ class Security extends Helper
         $this->loginfo($this->_ip . " " . $key);
     }
 
-    //检查某项测试是否超过最大数值
-    public function check(string $key, int $max)
-    {
-        $num = $this->_incr($key);
-        if ($num > $max) {
-            $this->_setLocked($key);
-        }
-    }
-
-    //新会话产生次数
-    public function incr_newSession()
-    {
-        $this->check(__FUNCTION__, 100);
-    }
 }

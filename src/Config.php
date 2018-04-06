@@ -1,6 +1,9 @@
 <?php
 namespace Bybzmt\Framework;
 
+/**
+ * 配置文件读取类
+ */
 class Config
 {
     static protected $data;

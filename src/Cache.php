@@ -1,6 +1,9 @@
 <?php
 namespace Bybzmt\Framework;
 
+/**
+ * 缓存对像公共基类
+ */
 abstract class Cache extends Component
 {
     //使用哪个memcached

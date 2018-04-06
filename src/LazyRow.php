@@ -3,6 +3,7 @@ namespace Bybzmt\Framework;
 
 /**
  * 行数据惰性加载器
+ * 实例化时并不访问数据库，只是记录下来，当来访问属性时再试图进行批量加载
  */
 class LazyRow extends Component
 {

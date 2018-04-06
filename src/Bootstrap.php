@@ -4,9 +4,12 @@ namespace Bybzmt\Framework;
 use Bybzmt\Router\Tool;
 use Bybzmt\Router\Reverse;
 
+/**
+ * 模块启器 (Swoole模式下它是常驻内存的)动
+ */
 abstract class Bootstrap
 {
-    //模块名字
+    //模块名字 (必填)
     public $name;
 
     //路由
@@ -28,22 +31,26 @@ abstract class Bootstrap
     {
         set_error_handler(array($this, 'exception_error_handler'), error_reporting());
 
+        //初始化上下文对像
         $ctx = $this->getContext();
         $ctx->request = $request;
         $ctx->response = $response;
 
+        //路由请求
         $method = $this->getMethod($request);
         $uri = $this->getUri($request);
 
         if (list($func, $params) = $this->getRouter()->match($method, $uri)) {
             list($obj, $method) = $this->preprocess($ctx, $func, $params);
 
+            //执行控制器
             $obj->$method();
         } else {
             $this->default404($ctx);
         }
     }
 
+    //得到反向路由
     public function getReverse()
     {
         if (!$this->reverse) {
@@ -54,6 +61,7 @@ abstract class Bootstrap
         return $this->reverse;
     }
 
+    //得到路由器
     protected function getRouter()
     {
         if (!$this->router) {
@@ -70,13 +78,13 @@ abstract class Bootstrap
 
     protected function getURI($request)
     {
-        $uri = parse_url($request->server['request_uri'], PHP_URL_PATH);
+        list($uri) = explode('?', $request->server['request_uri'], 2);
         return $uri;
     }
 
+    //映射参数到GET参数中去
     protected function _mapGET($ctx, array $params, array $keys)
     {
-        //映射参数到$_GET中去
         foreach ($params as $i => $param) {
             if (isset($keys[$i])) {
                 list($prefix, $key) = $keys[$i];
@@ -91,6 +99,7 @@ abstract class Bootstrap
         }
     }
 
+    //预处理
     protected function preprocess($ctx, $func, array $params)
     {
         list($class, $method, $keys, $map) = $func;
