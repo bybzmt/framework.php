@@ -1,0 +1,11 @@
+@startuml
+title 启动顺序
+
+Front -> Bootstrap : 启动指定模块
+Bootstrap -> Router : 路由匹配
+Router -> Bootstrap
+Bootstrap -> Controller : 执行控制器 execute() 方法
+Controller -> Bootstrap
+Bootstrap -> Front
+
+@enduml

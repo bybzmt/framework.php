@@ -1,0 +1,21 @@
+@startuml
+title 组件结构概况
+
+class ComponentTrait << (T, #ff0000) >> {
+}
+
+ComponentTrait <|-- Component : Trait
+class Component {
+    #_ctx
+}
+
+Context .. Component
+
+Component <|-- Controller
+Component <|-- Table
+Component <|-- Row
+Component <|-- Service
+Component <|-- Helper
+Component <|-- Cache
+
+@enduml

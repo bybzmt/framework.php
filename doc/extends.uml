@@ -1,0 +1,31 @@
+@startuml
+title Table组件概况
+
+class Table {
+}
+
+class TableSplit < extends Table > {
+}
+
+class TableRowCache << T, #ff0000, Trait >> {
+}
+
+
+namespace User.Table {
+    class Table1 {
+    }
+
+    class Table2 {
+    }
+
+    class Table3 {
+    }
+
+    .TableSplit <|-- Table3
+    .TableRowCache <|-- Table3 : Trait
+    .TableSplit <|-- Table2
+    .Table <|-- Table1
+}
+
+
+@enduml
