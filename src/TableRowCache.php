@@ -5,20 +5,13 @@ use Memcached;
 
 /**
  * 数据库表行缓存
- *
- * 在需要行缓存的Table类中增添加:
- * use TableRowCache;
- * protected $_keyPrefix = __CLASS__;
- * 即可！
  */
 trait TableRowCache
 {
     /*
      * 缓存前缀
-     * 子类必需定义！可以直接照抄这行！
-     * 注释掉是因为不能重复定义
      */
-    //protected $_keyPrefix = __CLASS__;
+    protected $_keyPrefix = __CLASS__;
 
     /*
      * 缓存时长
