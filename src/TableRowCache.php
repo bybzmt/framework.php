@@ -4,13 +4,31 @@ namespace Bybzmt\Framework;
 use Memcached;
 
 /**
- * 数据库表
+ * 数据库表行缓存
+ *
+ * 在需要行缓存的Table类中增添加:
+ * use TableRowCache;
+ * protected $_keyPrefix = __CLASS__;
+ * 即可！
  */
 trait TableRowCache
 {
-    protected $_keyPrefix;
-    protected $_hashPrefix;
+    /*
+     * 缓存前缀
+     * 子类必需定义！可以直接照抄这行！
+     * 注释掉是因为不能重复定义
+     */
+    //protected $_keyPrefix = __CLASS__;
+
+    /*
+     * 缓存时长
+     */
     protected $_expiration = 1800;
+
+    /**
+     * 缓存前缀(自动生成的)
+     */
+    protected $_hashPrefix;
 
     /**
      * 得到数据,缓存未命中时从数据库中加载
@@ -176,6 +194,7 @@ trait TableRowCache
                 //回调函数
                 $old = $row_or_fn($old);
             }
+            $old = $this->serialize($old);
 
             $ok = $memcached->cas($cas, $key, $old);
             if ($ok) {
@@ -244,10 +263,6 @@ trait TableRowCache
     //得到缓存key
     protected function getKey($id): string
     {
-        if (!$this->_keyPrefix) {
-            $this->_keyPrefix = static::class;
-        }
-
         return $this->_keyPrefix .":". $id;
     }
 
