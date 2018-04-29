@@ -14,10 +14,10 @@
     ],
     "require": {
         "php": ">=7.0.0",
-        "bybzmt/router":"^1.0",
+        "bybzmt/router":"~1.0",
         "flexihash/flexihash": "^2.0",
-        "bybzmt/logger": "^0.0.2",
-        "bybzmt/phpdb": "^1.0"
+        "bybzmt/logger": "~0.0.2",
+        "bybzmt/phpdb": "~1.0"
     },
     "autoload": {
         "psr-4": {
