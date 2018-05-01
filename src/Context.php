@@ -1,6 +1,8 @@
 <?php
 namespace Bybzmt\Framework;
 
+use ReflectionObject;
+
 /**
  * 环境上下对像
  */
@@ -25,6 +27,18 @@ class Context
     public function initComponent(string $name, ...$args)
     {
         $class = __NAMESPACE__ ."\\". $name;
+
+        if (!class_exists($class)) {
+            $trys = [];
+
+            $tmp = new ReflectionObject($this);
+            do {
+                $trys[] = $tmp->getNamespaceName() . "\\" . $name;
+            } while($tmp = $tmp->getParentClass());
+
+            throw new Exception("Component: $name Not Found. trys: ".implode(", ", $trys));
+        }
+
         return new $class($this, ...$args);
     }
 

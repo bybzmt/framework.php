@@ -21,16 +21,9 @@ abstract class Bootstrap
     //得到上下文对像
     abstract public function getContext();
 
-    public function exception_error_handler($errno, $errstr, $errfile, $errline)
-    {
-        throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
-    }
-
     //执行请求
     public function run($request, $response)
     {
-        set_error_handler(array($this, 'exception_error_handler'), error_reporting());
-
         //初始化上下文对像
         $ctx = $this->getContext();
         $ctx->request = $request;
