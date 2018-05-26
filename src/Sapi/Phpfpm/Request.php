@@ -25,7 +25,7 @@ class Request
 
     public function rawContent()
     {
-        return fopen('php://input', 'r');
+        return file_get_contents('php://input');
     }
 
     public function getData()

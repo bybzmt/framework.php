@@ -22,7 +22,7 @@ trait ComponentTrait
     {
         $row = $this->getTable($name)->get($id);
 
-        return $row ? $this->initRow($name, $row) : false;
+        return $row ? $this->initRow($name, $row) : null;
     }
 
     //批量加载数据行对像
