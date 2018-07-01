@@ -12,6 +12,8 @@ class LazyRow extends Component
     protected $initd;
     protected $row;
 
+    static protected $lazyRow = array();
+
     public function __construct(Context $context, string $name, string $id)
     {
         parent::__construct($context);
@@ -19,7 +21,7 @@ class LazyRow extends Component
         $this->name = $name;
         $this->id = $id;
 
-        $context->lazyRow[$name][$id][] = $this;
+        self::$lazyRow[$name][$id][] = $this;
     }
 
     protected function _do_set_row($row)
@@ -83,25 +85,19 @@ class LazyRow extends Component
      */
     protected function rowLoad()
     {
-        $ids = array_keys($this->_ctx->lazyRow[$this->name]);
+        $ids = array_keys(self::$lazyRow[$this->name]);
 
         $rows = $this->getTable($this->name)->gets($ids);
 
-        foreach ($this->_ctx->lazyRow[$this->name] as $id => $lazyRows) {
-            if (isset($rows[$id])) {
-                $obj = $this->initRow($this->name, $rows[$id]);
+        foreach (self::$lazyRow[$this->name] as $id => $objs) {
+            $row = isset($rows[$id]) ? $this->initRow($this->name, $rows[$id]) : false;
 
-                foreach ($lazyRows as $lazyRow) {
-                    $lazyRow->_do_set_row($obj);
-                }
-            } else {
-                foreach ($lazyRows as $lazyRow) {
-                    $lazyRow->_do_set_row(false);
-                }
+            foreach ($objs as $obj) {
+                $obj->_do_set_row($row);
             }
         }
 
-        unset($this->_ctx->lazyRow[$this->name]);
+        unset(self::$lazyRow[$this->name]);
     }
 
 }

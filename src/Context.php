@@ -20,9 +20,6 @@ class Context
     //组件
     public $components = array();
 
-    //标记的批量加载
-    public $lazyRow;
-
     //初始化组件
     public function initComponent(string $name, ...$args)
     {
